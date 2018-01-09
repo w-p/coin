@@ -1,0 +1,15 @@
+{
+    "name": "coin",
+    "version": "0.0.1",
+    "description": "Crypto currency trade bot",
+    "scripts": {
+        "start": "node ./src/app.js"
+    },
+    "author": "Will Palmer <email.william.palmer@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "commander": "^2.12.2",
+        "gdax": "github:coinbase/gdax-node",
+        "terminal-kit": "^1.14.3"
+    }
+}
