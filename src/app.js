@@ -1,5 +1,6 @@
 const gdax = require('gdax');
 var program = require('commander');
+var dateformat = require('dateformat');
 var term = require('terminal-kit').terminal;
 
 program
@@ -47,11 +48,15 @@ function render() {
 
     y += 1;
     term.moveTo(1, y);
-    term(`update: ${interval}s history: ${rows * interval}s`)
+    term(`update:  ${interval}s`);
 
     y += 1;
     term.moveTo(1, y);
-    term(`ticker: ${ticker} price: ${last_price} hi: ${high_price} lo: ${low_price}`);
+    term(`showing: ${rows * interval}s`);
+
+    y += 1;
+    term.moveTo(1, y);
+    term(`ticker:  ${ticker} price: ${last_price} hi: ${high_price} lo: ${low_price}`);
 
     y += 2;
     term.moveTo(1, y);
@@ -60,19 +65,20 @@ function render() {
     term('price');
 
     y += 1;
+    var start = rows > 15 ? rows - 15 : 0;
     price_history
-        .slice(rows - 15, rows)
-        .forEach((price, index) => {
+        .slice(start, rows)
+        .forEach((row, index) => {
             term.moveTo(1, y);
-            term(Date.now());
+            term(row.timestamp);
             term.moveTo(col_width, y);
-            term(price);
+            term(row.price);
             y += 1;
         });
 }
 
 function log(msg) {
-    term.moveTo(1, 20);
+    term.moveTo(1, 22);
     msg = `[notice] ${msg}`;
     term(msg);
 }
@@ -85,8 +91,12 @@ function get_price() {
     return client.getProductTicker(ticker)
         .then(res => {
             var price = round(res.price);
+            var date = dateformat(new Date(), 'dd-mm-yy hh:MM:ss');
             last_price = price;
-            price_history.push(price);
+            price_history.push({
+                price: price,
+                timestamp: date
+            });
             if (min_period <= 0) {
                 price_history.shift();
             }
@@ -94,8 +104,11 @@ function get_price() {
 }
 
 function calculate_limits() {
-    low_price = Math.min(...price_history);
-    high_price = Math.max(...price_history);
+    var prices = price_history.map((p) => {
+        return p.price;
+    });
+    low_price = Math.min(...prices);
+    high_price = Math.max(...prices);
 }
 
 function main() {

@@ -9,6 +9,7 @@
     "license": "MIT",
     "dependencies": {
         "commander": "^2.12.2",
+        "dateformat": "^3.0.2",
         "gdax": "github:coinbase/gdax-node",
         "terminal-kit": "^1.14.3"
     }
