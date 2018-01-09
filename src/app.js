@@ -56,7 +56,12 @@ function render() {
 
     y += 1;
     term.moveTo(1, y);
-    term(`ticker:  ${ticker} price: ${last_price} hi: ${high_price} lo: ${low_price}`);
+    term(
+        `ticker:  ${ticker} ` +
+        `price: ${last_price.toFixed(2)} ` +
+        `hi: ${high_price.toFixed(2)} ` +
+        `lo: ${low_price.toFixed(2)}`
+    );
 
     y += 2;
     term.moveTo(1, y);
@@ -72,7 +77,7 @@ function render() {
             term.moveTo(1, y);
             term(row.timestamp);
             term.moveTo(col_width, y);
-            term(row.price);
+            term(row.price.toFixed(2));
             y += 1;
         });
 }
